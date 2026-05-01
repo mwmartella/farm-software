@@ -14,3 +14,11 @@ SessionLocal = sessionmaker(
     autoflush=False,
     bind=engine,
 )
+
+def get_db():
+    #this function provides a database connection per request and auto cleans up after request
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
