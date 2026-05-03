@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, field_validator, ConfigDict
 from datetime import datetime
+from schema.validators import normalise_code_upper
 
 import uuid
 
@@ -14,8 +15,10 @@ class BusinessCreate(BaseModel):
     #field_validator is a function to fix the users input if the validation does not meet on the specifics,
     # in this case if they enter it in the wrong case it can fix it
     @classmethod
-    def uppercase_code(cls, v: str) -> str:
-        return v.strip().upper()
+    def validate_code(cls, v: str) -> str:
+        return normalise_code_upper(v)
+    #Even though ive imported a function to do this the @classmethod structure needs a function to run correctly
+    # so we still need a validate_code() function and we just have our imported logic inside it preventing copied code
 
 class BusinessRead(BaseModel):
     #This is the model for reading a business in the database
@@ -40,14 +43,8 @@ class BusinessUpdate(BaseModel):
 
     @field_validator("code")
     @classmethod
-    def uppercase_code(cls, v: str | None) -> str | None:
-        #The type hints have to match the type hints in the model
-        if v is not None:
-            return v.strip().upper()
-        return v
-        #We add the second return here because this makes it what is called "explicit"
-        # When V is none without it would default to python returning None but that is not best practise.
-        # This makes it crystal clear what is meant to happen and does not rely on python getting it right.
+    def validate_code(cls, v: str | None) -> str | None:
+        return normalise_code_upper(v)
 
     #This is the 3 fields that we want the user to be able to update.
     # name and code can be updated as they are linked to the UUID so they are not used for linked data.

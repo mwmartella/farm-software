@@ -36,13 +36,13 @@ def create_business(business_data: BusinessCreate, db: Session = Depends(get_db)
         raise already_exists('Business', business_data.code)
         #this is the controller that handles the exception that we questioned in the repo
 
-@router.get("/", response_model=list[BusinessRead])
+@router.get("/", response_model=list[BusinessRead], status_code=status.HTTP_200_OK)
 #response model here is list[] because even though the response returns a list we need to declare it a list
 def list_businesses(db: Session = Depends(get_db)):
     business_lst = list_business_repo(db)
     return business_lst
 
-@router.get("/{business_id}", response_model=BusinessRead)
+@router.get("/{business_id}", response_model=BusinessRead, status_code=status.HTTP_200_OK)
 #Note the {business_id} in the path, this is how we capture the UUID from the URL path.
 # Whatever function calls this endpoint will pass the argument of UUID which gets added
 def get_business_by_id(business_id: UUID, db: Session = Depends(get_db)):
