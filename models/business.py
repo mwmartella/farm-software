@@ -1,7 +1,7 @@
 #models/business.py
 #have commented up this first model just so when I write more of them I can understand and remember why I did things.
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, DateTime, func, Uuid
+from sqlalchemy import String, DateTime, func, Uuid, Boolean
 from datetime import datetime
 
 import uuid
@@ -16,6 +16,10 @@ class Business(Base):
     id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String, nullable=False)
     code: Mapped[str] = mapped_column(String(5), unique=True, nullable=False)
+    abn: Mapped[str] = mapped_column(String, nullable=True)
+    phone: Mapped[str] = mapped_column(String, nullable=True)
+    email: Mapped[str] = mapped_column(String, nullable=True)
+    is_supplier: Mapped[bool] = mapped_column(Boolean, server_default='false', nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     #sever_default means a TS will be created on row creation
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)

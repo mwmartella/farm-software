@@ -26,7 +26,14 @@ def create_business(client: TestClient, name: str = "Test Farm", code: str = "TF
     Default values mean you can call create_business(client) for a quick setup,
     or override them: create_business(client, name="Other Farm", code="OF001")
     """
-    return client.post("/businesses/", json={"name": name, "code": code})
+    return client.post("/businesses/", json={
+        "name": name,
+        "code": code,
+        "abn": "ABN111111",
+        "phone": "0400000000",
+        "email": "test@test.com.au",
+        "is_supplier": True
+    })
 
 
 # ── Create Tests ───────────────────────────────────────────────────────────────
@@ -42,6 +49,10 @@ def test_create_business_success(client):
     data = response.json()
     assert data["name"] == "Test Farm"
     assert data["code"] == "TF001"
+    assert data["abn"] == "ABN111111"
+    assert data["phone"] == "0400000000"
+    assert data["email"] == "test@test.com.au"
+    assert data["is_supplier"] == True
     assert "id" in data               # check a UUID was generated
     assert "created_at" in data       # check timestamps were set by the DB
 
