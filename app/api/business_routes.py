@@ -7,7 +7,7 @@ from uuid import UUID
 
 from app.db import get_db
 
-from app.api.helpers import not_found, already_exists, delete_message
+from app.api.helpers import not_found, already_exists, delete_message, foreign_key_remove_fail
 
 from schema.business import BusinessCreate, BusinessRead, BusinessUpdate
 
@@ -62,14 +62,20 @@ def update_business(business_id: UUID, business_updates: BusinessUpdate, db: Ses
         not_found("Business", business_id)
     #In order for the update to have the data it needs, when the user selects the row the ID stored.
     # Then using that ID the get_business_id function is called before running the update functions.
-    updated_business = update_business_repo(db, business, business_updates)
-    return updated_business
-
+    try:
+        updated_business = update_business_repo(db, business, business_updates)
+        return updated_business
+    except IntegrityError:
+        raise already_exists("Business", business_updates.code)
+    #Have to raise this error incase user updates a business to one already listed
 @router.delete("/{business_id}", status_code=status.HTTP_200_OK)
 def delete_business(business_id: UUID, db: Session = Depends(get_db)):
     business = get_business_by_id_repo(db, business_id)
     if business is None:
         not_found("Business", business_id)
-    delete_business_repo(db, business)
+    try:
+        delete_business_repo(db, business)
+    except IntegrityError:
+        raise foreign_key_remove_fail("Business")
     return delete_message("Business", business.code)
     #even though there is a return in the function we still need one here

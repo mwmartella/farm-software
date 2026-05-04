@@ -4,10 +4,11 @@ from sqlalchemy import text
 from app.db import SessionLocal
 
 from app.api.business_routes import router as business_router
-
+from app.api.site_routes import router as site_router
 app = FastAPI(title="Farm Software API")
 
 app.include_router(business_router)
+app.include_router(site_router)
 
 @app.get("/health")
 def health_check():

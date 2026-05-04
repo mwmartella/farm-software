@@ -8,8 +8,9 @@ import uuid
 class BusinessCreate(BaseModel):
     #BaseModel is the parent class for all schemas
     #This is the model for writing a business to the database
-    name: str
-    code: str = Field(max_length=5, description="A short abbreviation of the business name")
+    name: str = Field(min_length=1)
+    #we make min length 1 so the user cannot pass an empty '' string, this is different to not None
+    code: str = Field(min_length=1, max_length=5, description="A short abbreviation of the business name")
     #field is what we need to attach extra attributes to the data, in this instance I do not want the user to make a code that is longer than 5 char
     @field_validator("code")
     #field_validator is a function to fix the users input if the validation does not meet on the specifics,
@@ -36,8 +37,8 @@ class BusinessRead(BaseModel):
 
 class BusinessUpdate(BaseModel):
     #This is the model for updating a business in the database
-    name: str | None = None
-    code: str | None = Field(default=None, max_length=5)
+    name: str | None = Field(default=None, min_length=1)
+    code: str | None = Field(default=None, min_length=1, max_length=5)
     #The None = None lines added here allow the user to only update 1 of the 2 fields without crashing
     # We still have to keep the max_length constraint on the code otherwise a user could bypass that check by using update
 

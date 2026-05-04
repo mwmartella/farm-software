@@ -25,3 +25,5 @@ class Business(Base):
         return f"<Business id={self.id} name={self.name}, code={self.code}>"
     #this is here just as a debugger tool, if i needed to print the object it would come in code I could not read
     #this just prints out the info inside the object so I can see it if needed.
+
+# AFTER THIS IS DONE - edit the __init__.py file!
