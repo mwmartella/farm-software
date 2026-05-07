@@ -15,7 +15,7 @@ class BusinessCreate(BaseModel):
     abn: str | None = Field(default=None)
     phone: str | None = Field(default=None)
     email: str | None = Field(default=None)
-    is_supplier: bool | None = Field(default=False)
+    is_supplier: bool = Field(default=False)
     @field_validator("code")
     #field_validator is a function to fix the users input if the validation does not meet on the specifics,
     # in this case if they enter it in the wrong case it can fix it
@@ -34,7 +34,7 @@ class BusinessRead(BaseModel):
     abn: str | None = Field(default=None)
     phone: str | None = Field(default=None)
     email: str | None = Field(default=None)
-    is_supplier: bool | None = Field(default=False)
+    is_supplier: bool = Field(default=False)
     created_at: datetime
     updated_at: datetime
 
